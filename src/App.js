@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
 
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CityFind from './components/CityFind';
+import Weather from './components/Weather';
+import axios from 'axios';
+import { useState } from 'react';
 function App() {
+  const API_KEY = "8692d05e8ac74951fa46bb4279dadd19"
+  const [weather, setupdateWeather] = useState()
+  const [city, setUpdateCity] = useState()
+  console.log(city , "city state")
+  const fetchWeather = async (e) => {
+    e.preventDefault();
+    let response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}
+    `)
+    setupdateWeather(response.data)
+    // console.log(response.data, "testing");
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {weather ? (<Weather weather={weather} city={city} />) : (<CityFind setUpdateCity={setUpdateCity} fetchWeather={fetchWeather} />)
+      }
     </div>
   );
 }
